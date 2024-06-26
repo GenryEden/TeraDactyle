@@ -30,7 +30,7 @@ form.onsubmit = function(event) {
     let requestBody = {};
     requestBody.name = document.getElementById('name').value;
     requestBody.description = document.getElementById('description').value;
-    requestBody.language = document.getElementById('language').value;
+    requestBody.languageId = document.getElementById('language').value;
     event.preventDefault();
     reader.onload = function (e) {
         requestBody.code = e.target.result;
