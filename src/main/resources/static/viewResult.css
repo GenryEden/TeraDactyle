@@ -1,0 +1,23 @@
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  height: 100vh;
+}
+
+.column {
+  flex: 50%;
+}
+
+
+.break {
+    flex-basis: 100%;
+    height: 0;
+}
+
+.data {
+    flex: 100%;
+}
+
+.interferenceFraction {
+    margin-left: 50px;
+}
