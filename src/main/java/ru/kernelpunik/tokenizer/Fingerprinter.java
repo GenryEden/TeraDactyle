@@ -42,8 +42,10 @@ public class Fingerprinter {
         }
     }
 
-    public synchronized Iterator<Integer> getFingerprints(String source) {
-        TSTree tree = tsParser.parseStringEncoding(null, source, TSInputEncoding.TSInputEncodingUTF8);
+    public Iterator<Integer> getFingerprints(String source) {
+        TSParser tsParser1 = new TSParser();
+        tsParser1.setLanguage(tsParser.getLanguage());
+        TSTree tree = tsParser1.parseStringEncoding(null, source, TSInputEncoding.TSInputEncodingUTF8);
         KGram kGram = new KGram(k);
         return new WinnowingIterator(
                 new MapIterator<>(
@@ -52,7 +54,7 @@ public class Fingerprinter {
                             kGram.put(node.getType().hashCode());
                             return kGram.getHashCode();
                         }
-                ), 5
+                ), winnowLength
         );
     }
 }

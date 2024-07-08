@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import ru.kernelpunik.teradactyle.models.Interference;
 import ru.kernelpunik.teradactyle.models.Language;
 import ru.kernelpunik.teradactyle.models.Solution;
+import ru.kernelpunik.teradactyle.services.IPlagiarismDetectorService;
 import ru.kernelpunik.teradactyle.services.LanguageService;
-import ru.kernelpunik.teradactyle.services.PlagiarismDetectorService;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ import java.util.List;
 public class MainController {
     private final static int DOUBTFUL_BUT_OK_CODE = 267;
     private final LanguageService languageService;
-    private final PlagiarismDetectorService plagiarismDetectorService;
+    private final IPlagiarismDetectorService plagiarismDetectorService;
     @GetMapping(value="/getLanguages", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Language> getLanguages() {
         return languageService.getLanguages();

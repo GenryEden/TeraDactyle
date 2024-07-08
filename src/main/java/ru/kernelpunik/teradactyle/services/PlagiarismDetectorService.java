@@ -17,11 +17,10 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class PlagiarismDetectorService {
+public class PlagiarismDetectorService implements IPlagiarismDetectorService {
     private static final int DEFAULT_LIMIT = 20;
     private final Map<Integer, PlagiarismDetector> plagiarismDetectorMap = new HashMap<>();
     private SolutionRepository solutionRepository;
-    private FingerprintRepository fingerprintRepository;
     private InterferenceRepository interferenceRepository;
 
     public PlagiarismDetectorService(
@@ -30,13 +29,13 @@ public class PlagiarismDetectorService {
         InterferenceRepository interferenceRepository
     ) {
         this.solutionRepository = solutionRepository;
-        this.fingerprintRepository = fingerprintRepository;
         this.interferenceRepository = interferenceRepository;
         for (Language language : Language.values()) {
             plagiarismDetectorMap.put(language.id, new PlagiarismDetector(language.tsLanguage, fingerprintRepository));
         }
     }
 
+    @Override
     public Solution putSolution(Solution solution) {
         Solution updSolution = solutionRepository.save(solution);
         PlagiarismDetector plagiarismDetector = plagiarismDetectorMap.getOrDefault(solution.getLanguageId(), null);
@@ -55,18 +54,22 @@ public class PlagiarismDetectorService {
         return updSolution;
     }
 
+    @Override
     public Solution getSolution(long solutionId) {
         return solutionRepository.findById(solutionId).orElse(null);
     }
 
+    @Override
     public List<Interference> getInterferences(long solutionId) {
         return getInterferences(solutionId, DEFAULT_LIMIT);
     }
 
+    @Override
     public List<Interference> getInterferences(long solutionId, int limit) {
         return getInterferences(solutionId, limit, 0);
     }
 
+    @Override
     public List<Interference> getInterferences(long solutionId, int limit, int page) {
         return interferenceRepository.findBySolutionId(
                 solutionId,

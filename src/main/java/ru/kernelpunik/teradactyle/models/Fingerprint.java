@@ -13,7 +13,7 @@ import lombok.*;
 @IdClass(FingerprintId.class)
 public class Fingerprint {
     @Id
-    @Column(name = "value")
+    @Column(name = "fingerprint_value")
     private int value;
 
     @Id
