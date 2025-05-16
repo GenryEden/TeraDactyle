@@ -3,10 +3,9 @@ package ru.kernelpunik.teradactyle.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import ru.kernelpunik.teradactyle.models.Component;
 import ru.kernelpunik.teradactyle.models.Interference;
-import ru.kernelpunik.teradactyle.models.Solution;
-import ru.kernelpunik.teradactyle.services.IPlagiarismDetectorService;
-import ru.kernelpunik.teradactyle.services.PlagiarismDetectorService;
+import ru.kernelpunik.teradactyle.services.ICompositionDetectorService;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -14,18 +13,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.List;
 
-public class MvcPlagiarismServiceAdapter implements IPlagiarismDetectorService {
+public class MvcCompositionServiceAdapter implements ICompositionDetectorService {
 
     private final MockMvc mvc;
     ObjectMapper mapper = new ObjectMapper();
 
-    public MvcPlagiarismServiceAdapter(MockMvc mvc) {
+    public MvcCompositionServiceAdapter(MockMvc mvc) {
         this.mvc = mvc;
     }
 
 
     @Override
-    public Solution putSolution(Solution solution) {
+    public Component putComponent(Component solution) {
         try {
             String id = mvc.perform(
                     post("/v0/api/putSolution")
@@ -38,7 +37,7 @@ public class MvcPlagiarismServiceAdapter implements IPlagiarismDetectorService {
                                     assertTrue(result.getResponse().getContentAsString().matches("\\d+(\\.\\d+)?")
                                     )
                     ).andReturn().getResponse().getContentAsString();
-            solution.setSolutionId(Integer.parseInt(id));
+            solution.setComponentId(Integer.parseInt(id));
             return solution;
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -46,9 +45,9 @@ public class MvcPlagiarismServiceAdapter implements IPlagiarismDetectorService {
     }
 
     @Override
-    public Solution getSolution(long solutionId) {
+    public Component getComponent(long componentId) {
         try {
-            String ans = mvc.perform(get("/v0/api/getSolution?id=" + solutionId))
+            String ans = mvc.perform(get("/v0/api/getSolution?id=" + componentId))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.solutionId").exists())
                     .andExpect(jsonPath("$.code").exists())
@@ -56,7 +55,7 @@ public class MvcPlagiarismServiceAdapter implements IPlagiarismDetectorService {
                     .andExpect(jsonPath("$.name").exists())
                     .andExpect(jsonPath("$.description").exists())
                     .andReturn().getResponse().getContentAsString();
-            return mapper.readValue(ans, Solution.class);
+            return mapper.readValue(ans, Component.class);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

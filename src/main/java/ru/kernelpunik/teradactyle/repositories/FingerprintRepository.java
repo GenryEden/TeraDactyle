@@ -11,12 +11,10 @@ import java.util.List;
 
 @Repository
 public interface FingerprintRepository extends CrudRepository<Fingerprint, FingerprintId> {
-    @Query(
-            "select f from Fingerprint f join Solution s on s.solutionId = f.solutionId where f.value = :value " +
-                    "and s.languageId = :language_id"
-    )
-    List<Fingerprint> getAllFingerprintsByValueAndLanguage(
+    List<Fingerprint> findByValueAndLanguageId(
             @Param("value") int value,
-            @Param("language_id") long language_id
+            @Param("language_id") long languageId
     );
+
+    long countByComponentId(long componentId);
 }

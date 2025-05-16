@@ -1,7 +1,18 @@
 package ru.kernelpunik.teradactyle.models;
 
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapsId;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
@@ -17,15 +28,19 @@ public class Fingerprint {
     private int value;
 
     @Id
-    @Column(name = "solution_id")
-    private Long solutionId;
+    @Column(name = "component_id")
+    private Long componentId;
+
+    @Id
+    @Column(name = "language_id")
+    private int languageId;
 
     @MapsId
     @ManyToOne
     @JoinColumn(
-            name = "solution_id",
-            referencedColumnName = "solution_id"
+            name = "component_id",
+            referencedColumnName = "component_id"
     )
-    private Solution solution;
+    private Component component;
 
 }

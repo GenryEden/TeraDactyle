@@ -1,14 +1,14 @@
 package ru.kernelpunik.teradactyle.services;
 
+import ru.kernelpunik.teradactyle.models.Component;
 import ru.kernelpunik.teradactyle.models.Interference;
-import ru.kernelpunik.teradactyle.models.Solution;
 
 import java.util.List;
 
-public interface IPlagiarismDetectorService {
-    Solution putSolution(Solution solution);
+public interface ICompositionDetectorService {
+    Component putComponent(Component solution);
 
-    Solution getSolution(long solutionId);
+    Component getComponent(long componentId);
 
     List<Interference> getInterferences(long solutionId);
 

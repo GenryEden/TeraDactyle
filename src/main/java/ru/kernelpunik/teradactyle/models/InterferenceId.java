@@ -9,5 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class InterferenceId {
     private Long solutionId;
-    private Long interferedSolutionId;
+    private Long interferedComponentId;
+    private String path;
 }

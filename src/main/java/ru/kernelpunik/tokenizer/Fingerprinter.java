@@ -1,21 +1,29 @@
 package ru.kernelpunik.tokenizer;
 
+import org.antlr.v4.runtime.misc.MurmurHash;
 import org.treesitter.TSInputEncoding;
 import org.treesitter.TSParser;
 import org.treesitter.TSTree;
+import org.yaml.snakeyaml.util.ArrayUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Fingerprinter {
+    private static final int HASH_SEED = 1337;
     private static final int DEFAULT_K = 20;
-    private static final int DEFAULT_WINNOW_LENGTH = 5;
+    private static final int DEFAULT_WINNOW_LENGTH = 100;
+    public static final AtomicInteger CNT = new AtomicInteger();
     private final TSParser tsParser;
     private final int k;
     private final int winnowLength;
+
 
     public Fingerprinter(TSParser tsParser) {
         this(tsParser, DEFAULT_K, DEFAULT_WINNOW_LENGTH);
@@ -42,6 +50,10 @@ public class Fingerprinter {
         }
     }
 
+    public Iterator<Integer> getFingerprints(File file) throws IOException {
+        return getFingerprints(readFile(file));
+    }
+
     public Iterator<Integer> getFingerprints(String source) {
         TSParser tsParser1 = new TSParser();
         tsParser1.setLanguage(tsParser.getLanguage());
@@ -51,7 +63,13 @@ public class Fingerprinter {
                 new MapIterator<>(
                         new TSTreeDFS(tree.getRootNode()),
                         (node) -> {
-                            kGram.put(node.getType().hashCode());
+                            CNT.incrementAndGet();
+                            String type = node.getType();
+                            Byte[] bytes = new Byte[type.length()];
+                            for (int i = 0; i < type.length(); i++) {
+                                bytes[i] = (byte) type.charAt(i);
+                            }
+                            kGram.put(MurmurHash.hashCode(bytes, HASH_SEED));
                             return kGram.getHashCode();
                         }
                 ), winnowLength

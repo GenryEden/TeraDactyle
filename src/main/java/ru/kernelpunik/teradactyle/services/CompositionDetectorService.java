@@ -3,60 +3,45 @@ package ru.kernelpunik.teradactyle.services;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import ru.kernelpunik.teradactyle.models.Component;
 import ru.kernelpunik.teradactyle.models.Interference;
 import ru.kernelpunik.teradactyle.models.Language;
-import ru.kernelpunik.teradactyle.models.Solution;
 import ru.kernelpunik.teradactyle.repositories.FingerprintRepository;
 import ru.kernelpunik.teradactyle.repositories.InterferenceRepository;
-import ru.kernelpunik.teradactyle.repositories.SolutionRepository;
-import ru.kernelpunik.tokenizer.CollisionReport;
-import ru.kernelpunik.tokenizer.PlagiarismDetector;
+import ru.kernelpunik.teradactyle.repositories.ComponentRepository;
+import ru.kernelpunik.tokenizer.CompositionDetector;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Service
-public class PlagiarismDetectorService implements IPlagiarismDetectorService {
+public class CompositionDetectorService implements ICompositionDetectorService {
     private static final int DEFAULT_LIMIT = 20;
-    private final Map<Integer, PlagiarismDetector> plagiarismDetectorMap = new HashMap<>();
-    private SolutionRepository solutionRepository;
+    private final Map<Integer, CompositionDetector> compositionDetectorMap = new HashMap<>();
+    private ComponentRepository componentRepository;
     private InterferenceRepository interferenceRepository;
 
-    public PlagiarismDetectorService(
-        SolutionRepository solutionRepository,
+    public CompositionDetectorService(
+        ComponentRepository componentRepository,
         FingerprintRepository fingerprintRepository,
         InterferenceRepository interferenceRepository
     ) {
-        this.solutionRepository = solutionRepository;
+        this.componentRepository = componentRepository;
         this.interferenceRepository = interferenceRepository;
         for (Language language : Language.values()) {
-            plagiarismDetectorMap.put(language.id, new PlagiarismDetector(language.tsLanguage, fingerprintRepository));
+            compositionDetectorMap.put(language.id, new CompositionDetector(language.tsLanguage, fingerprintRepository));
         }
     }
 
     @Override
-    public Solution putSolution(Solution solution) {
-        Solution updSolution = solutionRepository.save(solution);
-        PlagiarismDetector plagiarismDetector = plagiarismDetectorMap.getOrDefault(solution.getLanguageId(), null);
-        CollisionReport collisionReport = plagiarismDetector.processSolution(solution);
-        for (Map.Entry<Long, Integer> entry: collisionReport.getCollisions().entrySet()) {
-            interferenceRepository.save(
-                new Interference(
-                    updSolution.getSolutionId(),
-                    updSolution,
-                    entry.getKey(),
-                    null,
-                        entry.getValue() * 1.0f / collisionReport.getTotalFingerprints()
-                )
-            );
-        }
-        return updSolution;
+    public Component putComponent(Component component) {
+        return componentRepository.save(component);
     }
 
     @Override
-    public Solution getSolution(long solutionId) {
-        return solutionRepository.findById(solutionId).orElse(null);
+    public Component getComponent(long componentId) {
+        return componentRepository.findById(componentId).orElse(null);
     }
 
     @Override

@@ -1,8 +1,17 @@
 package ru.kernelpunik.teradactyle.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.util.Objects;
 
@@ -13,15 +22,12 @@ import java.util.Objects;
 @NoArgsConstructor
 @Entity
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
-@Table(name="solution")
-public class Solution {
+@Table(name = "project")
+public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "solution_id")
-    private long solutionId;
-
-    @Column(name = "language_id")
-    private int languageId;
+    @Column(name = "project_id")
+    private long projectId;
 
     @Column(name = "name")
     private String name;
@@ -33,12 +39,12 @@ public class Solution {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Solution solution = (Solution) o;
-        return solutionId == solution.solutionId;
+        Project project = (Project) o;
+        return projectId == project.projectId;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(solutionId);
+        return Objects.hashCode(projectId);
     }
-}
+} 

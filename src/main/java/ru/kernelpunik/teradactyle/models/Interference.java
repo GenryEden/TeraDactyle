@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import ru.kernelpunik.teradactyle.repositories.ComponentRepository;
 
 @Getter
 @Setter
@@ -17,7 +18,7 @@ import lombok.*;
 public class Interference {
     @Id
     @Column(name = "solution_id")
-    private Long solutionId;
+    private long solutionId;
 
     @MapsId
     @ManyToOne
@@ -29,17 +30,21 @@ public class Interference {
     private Solution solution;
 
     @Id
-    @Column(name = "interfered_solution_id")
-    private Long interferedSolutionId;
+    @Column(name = "interfered_component_id")
+    private long interferedComponentId;
+
+    @Id
+    @Column(name="path")
+    private String path;
 
     @MapsId
     @ManyToOne
     @JoinColumn(
-            name = "interfered_solution_id",
-            referencedColumnName = "solution_id"
+            name = "interfered_component_id",
+            referencedColumnName = "component_id"
     )
     @JsonIgnore
-    private Solution interferedSolution;
+    private Component component;
 
     @Column(name = "interference_fraction")
     private double interferenceFraction;

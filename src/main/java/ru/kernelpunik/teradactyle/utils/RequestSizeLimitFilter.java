@@ -16,9 +16,6 @@ class RequestSizeLimitFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        if (request.getContentLengthLong() > 10000) {
-            response.sendError(413, "Payload too large");
-        }
         filterChain.doFilter(request, response);
     }
 }
