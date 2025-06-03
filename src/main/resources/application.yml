@@ -11,3 +11,8 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+pdg:
+  unitSize: 20
+  tolerance: 5
+  labelSimilarityThreshold: 0.2
+  charVectorSimilarityThreshold: 0.7

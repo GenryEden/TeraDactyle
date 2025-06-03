@@ -23,6 +23,7 @@ public class CollisionReport {
         collisions = new LinkedHashMap<>();
     }
 
+
     public void addFingerprints() {
         addFingerprints(1);
     }

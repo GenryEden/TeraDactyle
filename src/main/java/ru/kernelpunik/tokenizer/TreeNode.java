@@ -14,7 +14,14 @@ public class TreeNode<T> {
     private T value;
     private List<TreeNode<T>> children;
 
+    public TreeNode(T value) {
+        this(value, new ArrayList<>());
+    }
+
     static <T> TreeNode<T> empty() {
         return new TreeNode<>(null, new ArrayList<>());
+    }
+    public void addChild(TreeNode<T> child) {
+        children.add(child);
     }
 }

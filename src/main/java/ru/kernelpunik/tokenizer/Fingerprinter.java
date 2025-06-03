@@ -17,8 +17,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Fingerprinter {
     private static final int HASH_SEED = 1337;
-    private static final int DEFAULT_K = 20;
-    private static final int DEFAULT_WINNOW_LENGTH = 100;
+    private static final int DEFAULT_K = 10;
+    private static final int DEFAULT_WINNOW_LENGTH = 20;
     public static final AtomicInteger CNT = new AtomicInteger();
     private final TSParser tsParser;
     private final int k;

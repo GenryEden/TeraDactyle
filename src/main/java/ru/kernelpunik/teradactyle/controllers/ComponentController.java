@@ -17,11 +17,10 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.kernelpunik.teradactyle.models.Component;
 import ru.kernelpunik.teradactyle.services.IComponentService;
 import ru.kernelpunik.teradactyle.services.IComponentStorageService;
-import ru.kernelpunik.teradactyle.services.IFingerprintService;
+import ru.kernelpunik.teradactyle.services.ILibraryService;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 
 @RestController
 @RequestMapping("/v0/api/component")
@@ -30,7 +29,7 @@ public class ComponentController {
     private final static Log LOG = LogFactory.getLog(ComponentController.class);
     private final IComponentStorageService componentStorageService;
     private final IComponentService componentService;
-    private final IFingerprintService fingerprintService;
+    private final ILibraryService libraryService;
 
     @PostMapping("/")
     public ResponseEntity<Component> addComponent(
@@ -74,7 +73,7 @@ public class ComponentController {
         }
         long newFingerprints = -1;
         try {
-            newFingerprints = fingerprintService.addFingerprints(component, ans);
+            newFingerprints = libraryService.addLibrary(component, ans);
         } catch (IOException e) {
             return ResponseEntity
                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -110,7 +109,7 @@ public class ComponentController {
         }
         long newFingerprints = -1;
         try {
-            newFingerprints = fingerprintService.addFingerprints(component, ans);
+            newFingerprints = libraryService.addLibrary(component, ans);
         } catch (IOException e) {
             return ResponseEntity
                    .status(HttpStatus.INTERNAL_SERVER_ERROR)

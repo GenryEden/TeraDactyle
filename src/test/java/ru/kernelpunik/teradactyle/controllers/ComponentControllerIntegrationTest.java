@@ -15,7 +15,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import ru.kernelpunik.teradactyle.models.Component;
 import ru.kernelpunik.teradactyle.services.IComponentService;
 import ru.kernelpunik.teradactyle.services.IComponentStorageService;
-import ru.kernelpunik.teradactyle.services.IFingerprintService;
+import ru.kernelpunik.teradactyle.services.ILibraryService;
 
 import java.io.File;
 import java.io.IOException;
@@ -49,7 +49,7 @@ public class ComponentControllerIntegrationTest {
     private IComponentStorageService componentStorageService;
 
     @MockBean
-    private IFingerprintService fingerprintService;
+    private ILibraryService fingerprintService;
 
     private Component testComponent;
     private File testDirectory;
@@ -89,7 +89,7 @@ public class ComponentControllerIntegrationTest {
         when(componentStorageService.storeZip(any())).thenReturn(testDirectory);
         when(componentStorageService.storePlain(any())).thenReturn(testFile);
         
-        when(fingerprintService.addFingerprints(eq(testComponent), any(File.class))).thenReturn(42L);
+        when(fingerprintService.addLibrary(eq(testComponent), any(File.class))).thenReturn(42L);
     }
 
     /**
@@ -249,7 +249,7 @@ public class ComponentControllerIntegrationTest {
     @Test
     void testUploadZipFingerprintError() throws Exception {
         // Настройка мока на генерацию исключения
-        when(fingerprintService.addFingerprints(any(), any())).thenThrow(new IOException("Fingerprint error"));
+        when(fingerprintService.addLibrary(any(), any())).thenThrow(new IOException("Fingerprint error"));
 
         MockMultipartFile zipFile = new MockMultipartFile(
                 "file", 
@@ -355,7 +355,7 @@ public class ComponentControllerIntegrationTest {
     @Test
     void testUploadPlainFingerprintError() throws Exception {
         // Настройка мока на генерацию исключения
-        when(fingerprintService.addFingerprints(any(), any())).thenThrow(new IOException("Fingerprint error"));
+        when(fingerprintService.addLibrary(any(), any())).thenThrow(new IOException("Fingerprint error"));
 
         MockMultipartFile plainFile = new MockMultipartFile(
                 "file", 

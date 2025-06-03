@@ -55,6 +55,7 @@ public class ProjectProcessor {
             Language language = Language.getByFile(file);
             if (language == null) {
                 future.complete(new CollisionReport());
+                return;
             }
             CollisionReport result = new CollisionReport(file.toString());
             Iterator<Integer> fingerprints;

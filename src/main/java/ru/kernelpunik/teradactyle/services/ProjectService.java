@@ -2,6 +2,7 @@ package ru.kernelpunik.teradactyle.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import ru.kernelpunik.teradactyle.models.Project;
 import ru.kernelpunik.teradactyle.repositories.FingerprintRepository;
@@ -15,19 +16,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+@Primary
 @Service
 public class ProjectService implements IProjectService {
     private final ProjectRepository projectRepository;
-    private final FingerprintRepository fingerprintRepository;
     private final ProjectProcessor projectProcessor;
 
     @Autowired
     public ProjectService(ProjectRepository projectRepository, FingerprintRepository fingerprintRepository) {
-        this(projectRepository, fingerprintRepository, new ProjectProcessor(fingerprintRepository));
+        this(projectRepository, new ProjectProcessor(fingerprintRepository));
     }
 
-    public ProjectService(ProjectRepository projectRepository, FingerprintRepository fingerprintRepository, ProjectProcessor projectProcessor) {
-        this.fingerprintRepository = fingerprintRepository;
+    public ProjectService(ProjectRepository projectRepository, ProjectProcessor projectProcessor) {
         this.projectRepository = projectRepository;
         this.projectProcessor = projectProcessor;
     }

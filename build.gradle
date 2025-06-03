@@ -22,6 +22,9 @@ configurations {
 
 repositories {
 	mavenCentral()
+	maven {
+		url "https://oss.sonatype.org/content/repositories/snapshots/"
+	}
 }
 
 ext {
@@ -43,12 +46,18 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
 //	developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
+	implementation 'org.soot-oss:soot:4.5.0'
+
+//	implementation 'org.soot-oss:soot-infoflow:4.5.0'
+//  For PDG support, include jimple-based IDE packages if needed
+//    implementation 'ca.mcgill.sable:batik:1.12'
 	runtimeOnly 'org.postgresql:postgresql'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 	testImplementation 'com.h2database:h2'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
 }
 
 jar {

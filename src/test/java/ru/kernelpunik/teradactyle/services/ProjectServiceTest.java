@@ -42,7 +42,7 @@ class ProjectServiceTest {
 
     @BeforeEach
     void setUp() {
-        projectService = new ProjectService(projectRepository, fingerprintRepository, projectProcessor);
+        projectService = new ProjectService(projectRepository, projectProcessor);
     }
 
     @Test

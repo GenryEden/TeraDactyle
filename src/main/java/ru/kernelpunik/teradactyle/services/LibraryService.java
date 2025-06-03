@@ -1,6 +1,6 @@
 package ru.kernelpunik.teradactyle.services;
 
-import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import ru.kernelpunik.teradactyle.models.Component;
 import ru.kernelpunik.teradactyle.repositories.FingerprintRepository;
@@ -9,18 +9,19 @@ import ru.kernelpunik.tokenizer.ComponentProcessor;
 import java.io.File;
 import java.io.IOException;
 
+@Primary
 @Service
-public class FingerprintService implements IFingerprintService {
+public class LibraryService implements ILibraryService {
     private final FingerprintRepository fingerprintRepository;
     private final ComponentProcessor componentProcessor;
 
-    public FingerprintService(FingerprintRepository fingerprintRepository) {
+    public LibraryService(FingerprintRepository fingerprintRepository) {
         this.fingerprintRepository = fingerprintRepository;
         this.componentProcessor = new ComponentProcessor(fingerprintRepository);
     }
 
     @Override
-    public long addFingerprints(Component component, File fileTree) throws IOException {
+    public long addLibrary(Component component, File fileTree) throws IOException {
         long cntBefore = fingerprintRepository.countByComponentId(
                 component.getComponentId()
         );
