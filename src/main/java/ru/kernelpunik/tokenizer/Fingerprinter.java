@@ -17,8 +17,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Fingerprinter {
     private static final int HASH_SEED = 1337;
-    private static final int DEFAULT_K = 10;
-    private static final int DEFAULT_WINNOW_LENGTH = 20;
+    private static final int DEFAULT_K = 30;
+    private static final int DEFAULT_WINNOW_LENGTH = 40;
     public static final AtomicInteger CNT = new AtomicInteger();
     private final TSParser tsParser;
     private final int k;
@@ -61,7 +61,12 @@ public class Fingerprinter {
         KGram kGram = new KGram(k);
         return new WinnowingIterator(
                 new MapIterator<>(
-                        new TSTreeDFS(tree.getRootNode()),
+                        new FilterIterator<>(
+                            new TSTreeDFS(tree.getRootNode()),
+                            (node) -> {
+                                return !node.getType().contains("comment");
+                            }
+                        ),
                         (node) -> {
                             CNT.incrementAndGet();
                             String type = node.getType();

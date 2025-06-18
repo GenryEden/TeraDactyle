@@ -1,31 +1,176 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <title>Антиплагиат</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Java Code Comparator</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      box-sizing: border-box;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    .editor-container {
+      display: flex;
+      flex: 1;
+      gap: 1rem;
+    }
+    textarea {
+      flex: 1;
+      padding: 0.5rem;
+      font-family: "Source Code Pro", monospace;
+      font-size: 0.9rem;
+      line-height: 1.4;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      resize: none;
+    }
+    .controls {
+      margin: 1rem 0;
+      text-align: center;
+    }
+    button {
+      padding: 0.6rem 1.2rem;
+      font-size: 1rem;
+      cursor: pointer;
+      border: none;
+      border-radius: 4px;
+      background-color: #28a745;
+      color: white;
+    }
+    button:disabled {
+      background-color: #aaa;
+      cursor: not-allowed;
+    }
+    #result {
+      text-align: center;
+      font-size: 1.1rem;
+      font-weight: bold;
+    }
+  </style>
 </head>
-
 <body>
-    <h1>Антиплагиат</h1>
-    <form id="send_form">
-        <div>
-            <input type="text" id="name" name="name" placeholder="Название решения" required>
-        </div>
-        <div>
-            <input type="text" id="description" name="description" placeholder="Описание">
-        </div>
-        <div>
-            <select name="language" id="language">
-            </select>
-        </div>
-        <div>
-            <input type="file" id="filePick" name="code" required>
-        </div>
-        <input type="submit" value="Отправить">
-        <div id="result"></div>
-    </form>
-</body>
-<script type="text/javascript" src="send.js"></script>
+  <h1>Java Code Comparator</h1>
+  <div class="editor-container">
+    <textarea id="inputCode" spellcheck="false">
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
+public class StalinSort {
+    public static int[] stalinSort(int[] input) {
+        if (input == null || input.length == 0) {
+            return new int[0];
+        }
+        List<Integer> kept = new ArrayList<>();
+        int lastKept = input[0];
+        kept.add(lastKept);
+        for (int i = 1; i < input.length; i++) {
+            if (input[i] >= lastKept) {
+                lastKept = input[i];
+                kept.add(lastKept);
+            }
+        }
+        return kept.stream().mapToInt(Integer::intValue).toArray();
+    }
+
+    public static void main(String[] args) {
+        int[] data = {5, 1, 4, 4, 2, 3, 6, 2, 7, 7, 0, 8};
+        System.out.println("Original: " + Arrays.toString(data));
+        int[] sorted = stalinSort(data);
+        System.out.println("Stalin-sorted: " + Arrays.toString(sorted));
+    }
+}
+    </textarea>
+    <textarea id="referenceCode" spellcheck="false">
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+public class StalinSort {
+    public static int[] stalinSort(int[] input) {
+        if (input == null || input.length == 0) {
+            return new int[0];
+        }
+        List<Integer> kept = new ArrayList<>();
+        int lastKept = input[0];
+        kept.add(lastKept);
+        for (int i = 1; i < input.length; i++) {
+            if (input[i] >= lastKept) {
+                lastKept = input[i];
+                kept.add(lastKept);
+            }
+        }
+        return kept.stream().mapToInt(Integer::intValue).toArray();
+    }
+
+    public static void main(String[] args) {
+        int[] data = {5, 1, 4, 4, 2, 3, 6, 2, 7, 7, 0, 8};
+        System.out.println("Original: " + Arrays.toString(data));
+        int[] sorted = stalinSort(data);
+        System.out.println("Stalin-sorted: " + Arrays.toString(sorted));
+    }
+}
+    </textarea>
+  </div>
+  <div class="controls">
+    <button id="compareBtn">Compare</button>
+  </div>
+  <div id="result">Score: –</div>
+
+  <script>
+    const inputEl = document.getElementById('inputCode');
+    const refEl = document.getElementById('referenceCode');
+    const btn = document.getElementById('compareBtn');
+    const resultEl = document.getElementById('result');
+
+    btn.addEventListener('click', async () => {
+      const inputCode = inputEl.value.trim();
+      const referenceCode = refEl.value.trim();
+
+      if (!inputCode || !referenceCode) {
+        alert('Both code panels must be filled in.');
+        return;
+      }
+
+      btn.disabled = true;
+      resultEl.textContent = 'Comparing…';
+
+      try {
+        const form = new FormData();
+        form.append('input', inputCode);
+        form.append('reference', referenceCode);
+
+        const response = await fetch('http://localhost:8080/v0/api/compare/', {
+          method: 'POST',
+          body: form
+        });
+
+        if (!response.ok) {
+          throw new Error(`Server returned ${response.status}`);
+        }
+
+        const data = await response.json();
+        const score = typeof data === 'object' && data.score !== undefined
+          ? data.score
+          : data;
+        resultEl.textContent = `Score: ${parseFloat(score).toFixed(4)}`;
+      } catch (err) {
+        console.error(err);
+        resultEl.textContent = 'Error comparing code';
+      } finally {
+        btn.disabled = false;
+      }
+    });
+  </script>
+</body>
 </html>
+
