@@ -149,7 +149,7 @@ public class StalinSort {
         form.append('input', inputCode);
         form.append('reference', referenceCode);
 
-        const response = await fetch('http://localhost:8080/v0/api/compare/', {
+        const response = await fetch('http://kernelpunik.ru:4888/v0/api/compare/', {
           method: 'POST',
           body: form
         });
